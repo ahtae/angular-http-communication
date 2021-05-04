@@ -210,7 +210,7 @@ let EditBookComponent = class EditBookComponent {
     }
     ngOnInit() {
         let bookID = parseInt(this.route.snapshot.params['id']);
-        this.selectedBook = this.dataService.getBookById(bookID);
+        this.dataService.getBookById(bookID).subscribe((data) => this.selectedBook = data, (err) => console.log(err));
     }
     setMostPopular() {
         this.dataService.setMostPopularBook(this.selectedBook);
@@ -335,7 +335,12 @@ let DataService = class DataService {
         return this.http.get('/api/books');
     }
     getBookById(id) {
-        return app_data__WEBPACK_IMPORTED_MODULE_3__["allBooks"].find(book => book.bookID === id);
+        return this.http.get(`/api/books/${id}`, {
+            headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({
+                'Accept': 'application/json',
+                'Authorization': 'my-token'
+            })
+        });
     }
 };
 DataService.ctorParameters = () => [
